@@ -15,26 +15,26 @@
             <h1>Travel Tip App</h1>
         </div>
         <div class="nav-header">
-            <form onsubmit="onSearchLocation()">
-                <input type="text" name="location" id="location-searc" placeholder="Search Location"/>
+            <form onsubmit="onSearchLocation(event)">
+                <input type="text" name="location" id="location-searc" placeholder="Search Location" />
                 <button class="goto-location">Go</button>
             </form>
             <button class="my-location">My Location</button>
         </div>
     </header>
     <div class="location-info">
-        <h2 >Location:<span class="locs-info"></span></h2>
+        <h2>Location:<span class="locs-info"></span></h2>
         <button class="copy-location" onclick="onCopyLocation()">Copy Location</button>
     </div>
-<div class="map-conatianer flex">
-    <div id="map" style="width: 50%; height: 400px;"></div>
-    <div class="table-container">
-    <h3>Table Locations</h3>
+    <div class="map-conatianer flex">
+        <div id="map" style="width: 50%; height: 400px;"></div>
+        <div class="table-container">
+            <h3>Table Locations</h3>
+        </div>
     </div>
-</div>
-   
-    
-<script src= "js/services/storage-service.js"></script>
+
+    <script src="lib/axios.js"></script>
+    <!-- <script src="js/services/storage-service.js"></script> -->
     <script type="module" src="js/map-controller.js"></script>
 </body>
 

@@ -4,11 +4,10 @@ var gMap;
 // console.log('Main!');
 var gIdx = 101;
 mapService.getLocs().then((locs) => console.log('locs', locs));
-const LOCATION = 'location';
+
 window.onload = () => {
   document.querySelector('.my-location').addEventListener('click', (ev) => {
     console.log('Aha!', ev.target);
-    // panTo(35.6895, 139.6917);
     getNow();
   });
 
@@ -25,6 +24,7 @@ window.onload = () => {
     .catch((err) => {
       console.log('err!!!', err);
     });
+  renderLocation();
 };
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
@@ -51,16 +51,17 @@ function addLocation(lat, lng) {
     lng: lng,
     id: gIdx++,
   };
-  var locations = getLocation();
+  var locations = mapService.getLocation();
   if (!locations) locations = [];
   locations.push(location);
-  saveToStorage(LOCATION, locations);
+  mapService.saveUserLocation(locations);
   renderLocation();
   return location;
 }
 
 function renderLocation() {
-  var locations = getLocation();
+  var locations = mapService.getLocation();
+  if (!locations) locations = [];
   var strHTML = locations.map((location) => {
     return ` <table class="places"><thead><th>ID</th><th>Location Name</th><th>X</th><th>Y</th><th>Actions</th></thead><tbody>
       <tr>
@@ -71,7 +72,7 @@ function renderLocation() {
       </tbody></table> `;
   });
   document.querySelector('.table-container').innerHTML = strHTML.join('');
-  saveToStorage(LOCATION, locations);
+  mapService.saveUserLocation(locations);
 }
 function addMarker(loc) {
   var marker = new google.maps.Marker({
@@ -84,12 +85,12 @@ function addMarker(loc) {
 
 window.removeLocation = removeLocation;
 function removeLocation(id) {
-  var locations = getLocation();
+  var locations = mapService.getLocation();
   var position = locations.findIndex(function (location) {
     return id === location.id;
   });
   locations.splice(position, 1);
-  saveToStorage(LOCATION, locations);
+  mapService.saveUserLocation(locations);
   renderLocation();
 }
 window.goToLocation = goToLocation;
@@ -125,10 +126,10 @@ function _connectGoogleApi() {
   });
 }
 
-function getLocation() {
-  var locations = loadFromStorage(LOCATION);
-  return locations;
-}
+// function getLocation() {
+//   var locations = loadFromStorage(LOCATION);
+//   return locations;
+// }
 function getNow() {
   if (!navigator.geolocation) {
     alert('HTML5 Geolocation is not supported in your browser.');
@@ -141,38 +142,52 @@ function getNow() {
 }
 
 function showLocation(position) {
-    var lat = position.coords.latitude;
-    var lang = position.coords.longitude;
-    console.log(position);
-    // var date = new Date(position.timestamp);
-    // document.getElementById('timestamp').innerHTML =
-    //   date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-    var coords = new google.maps.LatLng(lat, lang); //Makes a latlng
-    gMap.panTo(coords);
-  }
+  var lat = position.coords.latitude;
+  var lang = position.coords.longitude;
+  console.log(position);
+  // var date = new Date(position.timestamp);
+  // document.getElementById('timestamp').innerHTML =
+  //   date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+  var coords = new google.maps.LatLng(lat, lang); //Makes a latlng
+  gMap.panTo(coords);
+}
 
-  function handleLocationError(error) {
-    var locationError = document.getElementById('locationError');
-  
-    switch (error.code) {
-      case 0:
-        locationError.innerHTML =
-          'There was an error while retrieving your location: ' + error.message;
-        break;
-      case 1:
-        locationError.innerHTML =
-          "The user didn't allow this page to retrieve a location.";
-        break;
-      case 2:
-        locationError.innerHTML =
-          'The browser was unable to determine your location: ' + error.message;
-        break;
-      case 3:
-        locationError.innerHTML =
-          'The browser timed out before retrieving the location.';
-        break;
-    }
-  }
-  
+function handleLocationError(error) {
+  var locationError = document.getElementById('locationError');
 
-  `https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyBIY92HpRALTKJdK5z-H_esCon3850knvs`
+  switch (error.code) {
+    case 0:
+      locationError.innerHTML =
+        'There was an error while retrieving your location: ' + error.message;
+      break;
+    case 1:
+      locationError.innerHTML =
+        "The user didn't allow this page to retrieve a location.";
+      break;
+    case 2:
+      locationError.innerHTML =
+        'The browser was unable to determine your location: ' + error.message;
+      break;
+    case 3:
+      locationError.innerHTML =
+        'The browser timed out before retrieving the location.';
+      break;
+  }
+}
+window.onSearchLocation = onSearchLocation;
+function onSearchLocation(ev) {
+  ev.preventDefault();
+  var elInput = document.querySelector('input[name=location]').value;
+  console.log('elInput:', elInput);
+  axios
+    .get(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${elInput}&key=AIzaSyBIY92HpRALTKJdK5z-H_esCon3850knvs`
+    )
+    .then((res) => {
+      console.log('res:', res.data.results[0].geometry.location);
+      panTo(
+        res.data.results[0].geometry.location.lat,
+        res.data.results[0].geometry.location.lng
+      );
+    });
+}
