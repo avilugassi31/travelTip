@@ -63,12 +63,12 @@ function renderLocation() {
   var locations = mapService.getLocation();
   if (!locations) locations = [];
   var strHTML = locations.map((location) => {
-    return ` <table class="places"><thead><th>ID</th><th>Location Name</th><th>X</th><th>Y</th><th>Actions</th></thead><tbody>
+    return ` <table class="places"><thead><th>ID</th><th>Location Name</th><th>X</th><th>Y</th><th colspan="2">Actions</th></thead><tbody>
       <tr>
       <td>${location.id}</td>
       <td>${location.name}</td><td>${location.lat}</td><td>${location.lng}</td>
-     <td><button onclick="removeLocation('${location.id}')">REMOVE</button></td>
-     <td><button onclick="goToLocation('${location.lat}','${location.lng}')">GoTo Location</button></td> </tr>
+     <td><button onclick="onRemoveLocation('${location.id}')">REMOVE</button></td>
+     <td><button onclick="onGoToLocation('${location.lat}','${location.lng}')">GoTo</button></td> </tr>
       </tbody></table> `;
   });
   document.querySelector('.table-container').innerHTML = strHTML.join('');
@@ -83,8 +83,8 @@ function addMarker(loc) {
   return marker;
 }
 
-window.removeLocation = removeLocation;
-function removeLocation(id) {
+window.onRemoveLocation = onRemoveLocation;
+function onRemoveLocation(id) {
   var locations = mapService.getLocation();
   var position = locations.findIndex(function (location) {
     return id === location.id;
@@ -93,8 +93,8 @@ function removeLocation(id) {
   mapService.saveUserLocation(locations);
   renderLocation();
 }
-window.goToLocation = goToLocation;
-function goToLocation(lat, lng) {
+window.onGoToLocation = onGoToLocation;
+function onGoToLocation(lat, lng) {
   var laLatLng = new google.maps.LatLng(lat, lng);
   gMap.panTo(laLatLng);
 }

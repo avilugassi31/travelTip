@@ -12,10 +12,9 @@
     <header class="main-header">
 
         <div class="header-title">
-            <h1>Travel Tip App</h1>
-            <h3>dont touch!</h3>
+            <h1>TravelTip</h1>
         </div>
-        <div class="nav-header">
+        <div class="nav-header flex">
             <form onsubmit="onSearchLocation(event)">
                 <input type="text" name="location" id="location-searc" placeholder="Search Location" />
                 <button class="goto-location">Go</button>
@@ -24,7 +23,7 @@
         </div>
     </header>
     <div class="location-info">
-        <h2>Location:<span class="locs-info"></span></h2>
+        <h2>Your Location:<span class="locs-info"></span></h2>
         <button class="copy-location" onclick="onCopyLocation()">Copy Location</button>
     </div>
     <div class="map-conatianer flex">
