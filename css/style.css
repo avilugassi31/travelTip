@@ -6,7 +6,7 @@ body {
   margin: 0 auto;
   font-family: cursive;
   text-align: center;
-  background-image: url("/img/1.jpg");
+  background-image: url(../img/1.jpg);
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
@@ -17,17 +17,19 @@ button {
   width: 100px;
   border-radius: 24px;
   height: 30px;
+  border:1px solid lightblue;
+  /* padding:10px; */
 }
 button:hover {
   background-color: lightblue;
 }
 input {
   height: 30px;
-  border-radius:12px;
+  border-radius: 12px;
 }
 h1 {
   padding: 10px;
-  text-shadow: 0.3125rem 0.3125rem 0.3125rem lightblue;
+  text-shadow: 0.3125rem 0.3125rem 0.3125rem rgb(183, 186, 187);
 }
 /* header */
 .main-header {
@@ -113,4 +115,36 @@ td {
 
 .space-around {
   justify-content: space-around;
+}
+
+
+
+@media (max-width:630px){
+  .map-conatianer{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  #map{
+    width: 100vw;
+    margin-top:50px;
+  }
+  .location-info{
+    justify-content:center;
+    flex-wrap: wrap;
+  }
+  .copy-location{
+    margin:0 auto;
+    height:20px;
+  }
+  .nav-header{
+    display:flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: center;
+
+  }
+  .my-location{
+    margin-top: .25rem;
+  }
 }

@@ -38,6 +38,16 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
     gMap.addListener('click', (mapsMouseEvent) => {
       var lat = mapsMouseEvent.latLng.lat();
       var lng = mapsMouseEvent.latLng.lng();
+      axios
+        .get(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyBIY92HpRALTKJdK5z-H_esCon3850knvs`
+        )
+        .then((res) => {
+          console.log('res:', res.data.results[0].formatted_address);
+          document.querySelector('.locs-info').innerText =
+            res.data.results[0].formatted_address;
+        });
+
       addLocation(lat, lng);
     });
     // console.log('Map!', gMap);
@@ -126,10 +136,6 @@ function _connectGoogleApi() {
   });
 }
 
-// function getLocation() {
-//   var locations = loadFromStorage(LOCATION);
-//   return locations;
-// }
 function getNow() {
   if (!navigator.geolocation) {
     alert('HTML5 Geolocation is not supported in your browser.');
