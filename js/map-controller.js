@@ -60,6 +60,7 @@ function addLocation(lat, lng) {
     lat: lat,
     lng: lng,
     id: gIdx++,
+    createdAt: new Date(),
   };
   var locations = mapService.getLocation();
   if (!locations) locations = [];
@@ -71,17 +72,20 @@ function addLocation(lat, lng) {
 
 function renderLocation() {
   var locations = mapService.getLocation();
+  console.log('locations:', locations);
+  var date = locations[0].createdAt;
   if (!locations) locations = [];
   var strHTML = locations.map((location) => {
-    return ` <table class="places"><thead><th>ID</th><th>Location Name</th><th>X</th><th>Y</th><th colspan="2">Actions</th></thead><tbody>
+    return `<tbody>
       <tr>
       <td>${location.id}</td>
       <td>${location.name}</td><td>${location.lat}</td><td>${location.lng}</td>
-     <td><button onclick="onRemoveLocation('${location.id}')">REMOVE</button></td>
-     <td><button onclick="onGoToLocation('${location.lat}','${location.lng}')">GoTo</button></td> </tr>
-      </tbody></table> `;
+      <td>${date}</td>
+     <td><button onclick="onRemoveLocation('${location.id}')">REMOVE</button>
+     <button onclick="onGoToLocation('${location.lat}','${location.lng}')">GoTo</button></td> </tr>
+      </tbody> `;
   });
-  document.querySelector('.table-container').innerHTML = strHTML.join('');
+  document.querySelector('.places').innerHTML += strHTML.join('');
   mapService.saveUserLocation(locations);
 }
 function addMarker(loc) {
@@ -152,8 +156,8 @@ function showLocation(position) {
   var lang = position.coords.longitude;
   console.log(position);
   // var date = new Date(position.timestamp);
-  // document.getElementById('timestamp').innerHTML =
-  //   date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+  // document.querySelector('timestamp').innerHTML =
+  // //   date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
   var coords = new google.maps.LatLng(lat, lang); //Makes a latlng
   gMap.panTo(coords);
 }
